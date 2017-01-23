@@ -25,6 +25,7 @@ args = mainParser.parse_args()
 url = args.URL
 headers = args.headers
 verb = args.subparser_name.upper()
+verbose = args.isVerbose
 
 data = file = None
 
@@ -33,8 +34,6 @@ host = matcher.group(5)
 port = matcher.group(7)
 path = matcher.group(8)
 params = matcher.group(12)
-print(host)
-    
 
 if port is None:
     port = DEFAULT_PORT
@@ -75,10 +74,18 @@ print(request)
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host , port))
 s.send(request.encode())
-response = s.recv(4096)
-print(response)
+responseBytes = s.recv(4096)
+# print(responseBytes)
+response = responseBytes.decode()
+# print(response)
 
-
+finalOutput = ''
+if verbose:
+    responseHeaders = response.split(CRLF+CRLF)
+    finalOutput = responseHeaders[0]
+    
+print(finalOutput)
+    
 
 
 
