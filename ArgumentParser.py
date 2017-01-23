@@ -11,7 +11,6 @@ def generateArgParsers():
     parentParser.add_argument('-v',
                               dest="isVerbose",
                               action="store_const", const=True, default=False,
-                              required=True,
                               help="Prints the detail of the response such as protocol, status, and headers.")
     parentParser.add_argument('-H',
                               dest="headers",
@@ -24,7 +23,7 @@ def generateArgParsers():
     # Main Parse: httpc client
     mainParser = argparse.ArgumentParser(prog="httpc", description="httpc is a curl-like application but supports HTTP protocol only")
     
-    subParsers = mainParser.add_subparsers(help='[command] help')
+    subParsers = mainParser.add_subparsers(help='[command] help', dest="subparser_name")
     
     # GET command
     getParser = subParsers.add_parser('get',
