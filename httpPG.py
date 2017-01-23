@@ -7,6 +7,7 @@ Created on Jan 21, 2017
 import socket
 import re
 import ArgumentParser
+import sys
 
 POST = "POST"
 GET = "GET"
@@ -71,12 +72,18 @@ if verb == POST:
     
 request = ''.join([request, CRLF])
  
+ 
 # Send Request
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host , port))
-s.send(request.encode())
-responseBytes = s.recv(4096)
-response = responseBytes.decode()
+try:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host , port))
+    s.send(request.encode())
+    responseBytes = s.recv(4096)
+    response = responseBytes.decode()
+except:
+    print("Invalid input. please retry")
+    sys.exit(0)
+
 
 finalOutput = ''
 responseHeaders = response.split(CRLF+CRLF)
