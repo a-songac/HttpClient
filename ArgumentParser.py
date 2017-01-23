@@ -14,7 +14,7 @@ def generateArgParsers():
                               help="Prints the detail of the response such as protocol, status, and headers.")
     parentParser.add_argument('-H',
                               dest="headers",
-                              action="store",
+                              action="append",
                               metavar="key:value",
                               help="Associates headers to HTTP Request with the format 'key:value'")
     

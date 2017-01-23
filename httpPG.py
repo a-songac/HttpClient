@@ -35,8 +35,7 @@ matcher = re.search(URL_REGEX, url)
 host = matcher.group(3)
 port = matcher.group(5)
 path = matcher.group(6)
-headers
-
+    
 
 if port is None:
     port = DEFAULT_PORT
@@ -45,7 +44,6 @@ if path is None:
     path = DEFAULT_PATH
      
  
-headers = ''
 request = ''.join([verb, ' ', path, ' HTTP/1.1', CRLF])
  
 if verb == POST:
