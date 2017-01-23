@@ -1,2 +1,0 @@
-hello=hi
-hel2lo=hi2

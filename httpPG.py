@@ -26,6 +26,7 @@ url = args.URL
 headers = args.headers
 verb = args.subparser_name.upper()
 verbose = args.isVerbose
+outputFile = args.outputFile
 
 data = file = None
 
@@ -41,7 +42,6 @@ if port is None:
 if path is None:
     path = DEFAULT_PATH
      
- 
 request = ''.join([verb, ' ', path, ' HTTP/1.1', CRLF])
  
 if verb == POST:
@@ -84,9 +84,12 @@ if verbose:
     responseHeaders = response.split(CRLF+CRLF)
     finalOutput = responseHeaders[0]
     
-print(finalOutput)
-    
 
-
+if outputFile is None :
+    print(finalOutput)
+else :
+    f = open(outputFile, 'w')
+    f.write(finalOutput)
+    f.close()
 
 

@@ -17,6 +17,10 @@ def generateArgParsers():
                               action="append",
                               metavar="key:value",
                               help="Associates headers to HTTP Request with the format 'key:value'")
+    parentParser.add_argument('-o',
+                              dest="outputFile",
+                              action="store",
+                              help="Write output to the given file")
     
     parentParser.add_argument('URL', action="store", help="URL for the Http request")
     
