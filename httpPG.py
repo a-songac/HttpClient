@@ -27,9 +27,6 @@ headers = args.headers
 verb = args.subparser_name.upper()
 
 data = file = None
-if verb == POST:
-    data = args.data
-    file = args.file
 
 matcher = re.search(URL_REGEX, url)
 host = matcher.group(5)
@@ -49,12 +46,26 @@ if path is None:
 request = ''.join([verb, ' ', path, ' HTTP/1.1', CRLF])
  
 if verb == POST:
-    data_bytes = data.encode()
+    parameters = ''
+    data = args.data
+    file = args.file
+    if file is None:
+        parameters = args.data
+    else:
+        f = open(file, 'r')
+        for line in f:
+            if line:
+                parameters += line.rstrip('\n') + '&'
+
+    if parameters[-1] == '&':
+        parameters = parameters.rstrip('&')
+
+    data_bytes = parameters.encode()
     request = ''.join([request,
                        contentLength.format(content_length = len(data_bytes)), CRLF,
                        hostName.format(host_name = str(host) + ":" + str(port)), CRLF,
                        CONNECTION_CLOSE, CRLF, CRLF,
-                       data])
+                       parameters])
     
 request = ''.join([request, CRLF])
 print(request)
