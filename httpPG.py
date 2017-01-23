@@ -10,7 +10,7 @@ import ArgumentParser
 
 POST = "POST"
 GET = "GET"
-URL_REGEX = "^((http[s]?|ftp):\/)?\/?([^:\/\s\?]+)(:(\d+))?(\/([\w\/]+)(\.\w+)?)?(\?([\w=&]+))?$"
+URL_REGEX = "^((http[s]?|ftp):\/)?\/?((www\.)?([^:\/\s\?]+))(:(\d+))?(\/([\w\/]+)(\.\w+)?)?(\?([\w=&]+))?$"
 CRLF = '\r\n'
 DEFAULT_PATH = "/"
 DEFAULT_PORT = 80
@@ -32,9 +32,11 @@ if verb == POST:
     file = args.file
 
 matcher = re.search(URL_REGEX, url)
-host = matcher.group(3)
-port = matcher.group(5)
-path = matcher.group(6)
+host = matcher.group(5)
+port = matcher.group(7)
+path = matcher.group(8)
+params = matcher.group(12)
+print(host)
     
 
 if port is None:
@@ -55,12 +57,18 @@ if verb == POST:
                        data])
     
 request = ''.join([request, CRLF])
+print(request)
  
 # Send Request
-print("Request to be sent:\r\n\r\n" + request)
+# print("Request to be sent:\r\n\r\n" + request)
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host , port))
 s.send(request.encode())
-print("\r\nRESPONSE:" + "\r\n")
-print(s.recv(4096))
+response = s.recv(4096)
+print(response)
+
+
+
+
+
 
