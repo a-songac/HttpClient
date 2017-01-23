@@ -36,6 +36,13 @@ port = matcher.group(7)
 path = matcher.group(8)
 params = matcher.group(12)
 
+headersJson = {}
+
+if headers is not None:
+    for header in headers:
+        splittedHeader = header.split(':')
+        headersJson[splittedHeader[0]]  = splittedHeader[1]
+
 if port is None:
     port = DEFAULT_PORT
  
@@ -70,7 +77,11 @@ if verb == POST:
                        parameters])
     
 request = ''.join([request, CRLF])
- 
+
+if headersJson:
+    for key, value in headersJson.items():
+        request = ''.join([request, key,  ':' , value , CRLF])
+
 # Send Request
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host , port))
