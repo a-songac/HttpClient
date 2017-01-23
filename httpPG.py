@@ -7,6 +7,7 @@ Created on Jan 21, 2017
 import socket
 import argparse
 import re
+from requests.api import request
 
 URL_REGEX = "^((http[s]?|ftp):\/)?\/?([^:\/\s\?]+)(:(\d+))?(\/([\w\/]+)(\.\w+)?)?(\?([\w=&]+))?$"
 CRLF = '\r\n'
@@ -18,9 +19,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument('url', action="store")
 parser.add_argument('--post', '-P', dest="verb", action="store_const",
                      const="POST", default="GET", help="HTTP Verb POST, or GET if not provided")
+parser.add_argument('--data', '-D', dest="data", action="store",
+                     help="Data to be included in a POST request")
+
 args = parser.parse_args()
 url = args.url
 verb = args.verb
+data = args.data
 
 # Parse input 
 matcher = re.search(URL_REGEX, args.url)
@@ -33,14 +38,20 @@ if port is None:
 
 if path is None:
     path = DEFAULT_PATH
+    
 
-requestHeaders = ''
+headers = ''
 request = ''.join([verb, ' ', path, ' HTTP/1.1', CRLF, CRLF])
 
+if data is not None and verb == "POST":
+    request = ''.join([request, data])
+
 # Send Request
+print("Request to be sent:\r\n\r\n" + request)
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                 
 s.connect((host , port))
-print(request)
 s.send(request.encode())
+print("\r\nRESPONSE:" + "\r\n")
 print(s.recv(4096))
 s.close    
+
