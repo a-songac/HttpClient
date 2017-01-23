@@ -35,7 +35,6 @@ matcher = re.search(URL_REGEX, url)
 host = matcher.group(3)
 port = matcher.group(5)
 path = matcher.group(6)
-data = None
 headers
 
 
@@ -52,7 +51,6 @@ request = ''.join([verb, ' ', path, ' HTTP/1.1', CRLF])
 if verb == POST:
     data_bytes = data.encode()
     request = ''.join([request,
-                       contentType.format(content_type="application/form-data"), CRLF,
                        contentLength.format(content_length = len(data_bytes)), CRLF,
                        hostName.format(host_name = str(host) + ":" + str(port)), CRLF,
                        CONNECTION_CLOSE, CRLF, CRLF,
