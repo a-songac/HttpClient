@@ -18,15 +18,13 @@ mainParser = ArgumentParser.generateArgParsers()
 args = mainParser.parse_args()
 print(args)
 
-# url = args.url
-# verb = args.verb
-# data = args.data
-# 
-# # Parse input 
-# matcher = re.search(URL_REGEX, args.url)
-# host = matcher.group(3)
-# port = matcher.group(5)
-# path = matcher.group(6)
+url = args.url
+ 
+# Parse input 
+matcher = re.search(URL_REGEX, args.url)
+host = matcher.group(3)
+port = matcher.group(5)
+path = matcher.group(6)
 # 
 # if port is None:
 #     port = DEFAULT_PORT
