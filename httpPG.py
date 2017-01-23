@@ -43,7 +43,12 @@ if path is None:
     path = DEFAULT_PATH
      
 request = ''.join([verb, ' ', path, ' HTTP/1.1', CRLF])
- 
+
+request = ''.join([request,
+                   hostName.format(host_name = str(host) + ":" + str(port)), CRLF,
+                   CONNECTION_CLOSE, CRLF, CRLF
+                   ])
+
 if verb == POST:
     parameters = ''
     data = args.data
@@ -62,28 +67,23 @@ if verb == POST:
     data_bytes = parameters.encode()
     request = ''.join([request,
                        contentLength.format(content_length = len(data_bytes)), CRLF,
-                       hostName.format(host_name = str(host) + ":" + str(port)), CRLF,
-                       CONNECTION_CLOSE, CRLF, CRLF,
                        parameters])
     
 request = ''.join([request, CRLF])
-print(request)
  
 # Send Request
-# print("Request to be sent:\r\n\r\n" + request)
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host , port))
 s.send(request.encode())
 responseBytes = s.recv(4096)
-# print(responseBytes)
 response = responseBytes.decode()
-# print(response)
 
 finalOutput = ''
+responseHeaders = response.split(CRLF+CRLF)
 if verbose:
-    responseHeaders = response.split(CRLF+CRLF)
     finalOutput = responseHeaders[0]
     
+finalOutput = ''.join([finalOutput, CRLF, CRLF, responseHeaders[1]])
 
 if outputFile is None :
     print(finalOutput)
