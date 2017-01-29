@@ -28,6 +28,7 @@ def generateArgParsers():
     mainParser = argparse.ArgumentParser(prog="httpc", description="httpc is a curl-like application but supports HTTP protocol only")
     
     subParsers = mainParser.add_subparsers(help='[command] help', dest="subparser_name")
+    subParsers.required = True
     
     # GET command
     getParser = subParsers.add_parser('get',
