@@ -12,7 +12,8 @@ import sys
 
 POST = "POST"
 GET = "GET"
-URL_REGEX = "^((http[s]?|ftp):\/)?\/?((www\.)?([^:\/\s\?]+))(:(\d+))?(\/([\w\/]+)(\.\w+)?)?(\?([\w=&]+))?$"
+URL_REGEX = "((http[s]?|ftp):\/)?\/?((www\.)?([^:\/\s\?]+))(:(\d+))?(\/[\w\/]*)?(\.\w+)?(\?([\w=&]+))?"
+# URL_REGEX = "((http[s]?|ftp):\/)?\/?((www\.)?([^:\/\s\?]+))(:(\d+))?(\/([\w\/]+)?(\.\w+)?)?(\?([\w=&]+))?"
 CRLF = '\r\n'
 DEFAULT_PATH = "/"
 DEFAULT_PORT = 80
@@ -116,6 +117,7 @@ class HttpRequest:
         responseStatus = parseResonseStatus(responseHeaders)
         
         if responseStatus >= 300 and responseStatus < 400 :
+            
             newUrl = parseRedirectUrlFor300(response)
             matcher = re.search(URL_REGEX, newUrl)
             self.host = matcher.group(5)
@@ -164,7 +166,8 @@ def parseResonseStatus(responseHeaders):
 # Extract redirect url
 # ####################### 
 def parseRedirectUrlFor300(responseBody):
-    #TODO
+    pattern = re.search('(Location: )(.+)', responseBody)
+    return pattern.group(2)
     return "http://httpbin.org/get"
     
 
