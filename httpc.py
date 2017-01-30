@@ -34,8 +34,8 @@ def parseResonseStatus(responseHeaders):
 # Extract redirect url
 # ####################### 
 def parseRedirectUrlFor300(responseBody):
-    #TODO
-    return "http://httpbin.org/get"
+    pattern = re.search('(Location: )(.+)', responseBody)
+    return pattern.group(2)
     
 # #######################
 # Build HTTP request
