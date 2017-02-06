@@ -84,7 +84,7 @@ class HttpRequest:
         
         if headersJson:
             for key, value in headersJson.items():
-                request = ''.join([request, key,  ':' , value , CRLF])
+                request = ''.join([request, key,  ': ' , value , CRLF])
                 
         
         self.request = request
@@ -99,7 +99,6 @@ class HttpRequest:
     # Process Http Request
     # ####################### 
     def processRequest(self):
-        
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # SOCK_STREAM for TCP
             s.connect((self.host , self.port))
@@ -136,11 +135,10 @@ class HttpRequest:
                 self.processRequest()
             
         else :
-            finalOutput = ''
             if self.verbose:
-                finalOutput = responseArr[0]
-                
-            finalOutput = ''.join([finalOutput, CRLF, CRLF, responseArr[1]])
+                finalOutput = response
+            else:
+                finalOutput = responseArr[1]
             
             if self.outputFile is None :
                 print(finalOutput)
