@@ -19,8 +19,6 @@ DEFAULT_PATH = "/"
 DEFAULT_PORT = 80
 contentType = "Content-Type: {content_type}"
 contentLength = "Content-length: {content_length}"
-hostName = "Host: {host_name}"
-CONNECTION_CLOSE = "Connection: Keep-Alive"
 
 class HttpRequest:
     
@@ -40,28 +38,44 @@ class HttpRequest:
         self.verbose = verbose
         self.outputFile = outputFile
         return
-        
-        
+
+
+    def isValidHeader(self, key):
+        if(str(key) == "Host" or str(key) == "Content-length"):
+            return False
+        return True
+
         
     # #######################
     # Build HTTP request
     # ####################### 
     def buildRequest(self):
     
-        headersJson = {}
+        headersJson = {
+            "Host": "",
+            "Connection": "Keep-Alive"
+        }
         
         if self.headers is not None:
             for header in self.headers:
                 splittedHeader = header.split(':')
-                headersJson[splittedHeader[0]]  = splittedHeader[1]
-        
+                headerKey = str(splittedHeader[0])
+                if(not(self.isValidHeader(headerKey))):
+                    print("Cannot override header: " + headerKey + "\n")
+                else:
+                    headersJson[headerKey] = splittedHeader[1]
+
         request = ''.join([self.verb, ' ', self.path, ' HTTP/1.1', CRLF])
         
-        request = ''.join([request,
-                           hostName.format(host_name = str(self.host)), CRLF,
-                           CONNECTION_CLOSE, CRLF, CRLF
-                           ])
-        
+        headersJson["Host"] = self.host
+
+        if headersJson:
+            for key, value in headersJson.items():
+                    headersJson[key] = value
+                    request = ''.join([request, key,  ':' , value , CRLF])
+
+
+
         if self.verb == POST:
             parameters = ''
             if self.file is None:
@@ -77,7 +91,7 @@ class HttpRequest:
         
             data_bytes = parameters.encode()
             request = ''.join([request,
-                               contentLength.format(content_length = len(data_bytes)), CRLF,
+                               contentLength.format(content_length = len(data_bytes)), CRLF, CRLF,
                                parameters])
             
         request = ''.join([request, CRLF])
@@ -86,14 +100,9 @@ class HttpRequest:
             for key, value in headersJson.items():
                 request = ''.join([request, key,  ': ' , value , CRLF])
                 
-        
+
         self.request = request
         return
-        
-        
-        
-        
-        
         
     # #######################
     # Process Http Request
