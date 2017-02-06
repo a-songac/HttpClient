@@ -14,6 +14,7 @@ from HttpcHelper import HttpRequest
 mainParser = ArgumentParser.generateArgParsers()
 args = mainParser.parse_args()
 
+
 url = args.URL
 headers = args.headers
 verb = args.subparser_name.upper()
@@ -22,6 +23,9 @@ outputFile = args.outputFile
 if verb == HttpcHelper.POST:
     data = args.data
     file = args.file
+    if args.data is not None and args.file is not None:
+        print("Cannot have both data and file for POST input")
+        exit()
 else:
     data = file = None
 
