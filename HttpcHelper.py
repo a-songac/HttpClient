@@ -54,14 +54,18 @@ class HttpRequest:
             for header in self.headers:
                 splittedHeader = header.split(':')
                 headersJson[splittedHeader[0]]  = splittedHeader[1]
-        
+
         request = ''.join([self.verb, ' ', self.path, ' HTTP/1.1', CRLF])
         
         request = ''.join([request,
                            hostName.format(host_name = str(self.host)), CRLF,
-                           CONNECTION_CLOSE, CRLF, CRLF
+                           CONNECTION_CLOSE, CRLF
                            ])
-        
+        if headersJson:
+            for key, value in headersJson.items():
+                request = ''.join([request, key,  ':' , value , CRLF])
+
+
         if self.verb == POST:
             parameters = ''
             if self.file is None:
@@ -77,17 +81,16 @@ class HttpRequest:
         
             data_bytes = parameters.encode()
             request = ''.join([request,
-                               contentLength.format(content_length = len(data_bytes)), CRLF,
+                               contentLength.format(content_length = len(data_bytes)), CRLF, CRLF,
                                parameters])
             
         request = ''.join([request, CRLF])
-        
-        if headersJson:
-            for key, value in headersJson.items():
-                request = ''.join([request, key,  ':' , value , CRLF])
-                
+
+
+
         
         self.request = request
+        print(request)
         return
         
         
