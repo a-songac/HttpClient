@@ -1,4 +1,6 @@
 COMP 445 Lab 1
+Arnaud Songa-Cote 26955185
+Eric Lam 26958141
 
 INFO 
 - Execute python script: ./httpc.py

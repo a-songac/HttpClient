@@ -12,7 +12,7 @@ import sys
 
 POST = "POST"
 GET = "GET"
-URL_REGEX = "((http[s]?|ftp):\/)?\/?((www\.)?([^:\/\s\?]+))(:(\d+))?(\/[\w\/]*)?(\.\w+)?(\?([\w=&]+))?"
+URL_REGEX = "((http[s]?|ftp):\/)?\/?((www\.)?([^:\/\s\?]+))(:(\d+))?(((\/[\w\/]*)?(\.\w+))?(\?([\w=&]+))?)"
 # URL_REGEX = "((http[s]?|ftp):\/)?\/?((www\.)?([^:\/\s\?]+))(:(\d+))?(\/([\w\/]+)?(\.\w+)?)?(\?([\w=&]+))?"
 CRLF = '\r\n'
 DEFAULT_PATH = "/"
@@ -29,7 +29,7 @@ class HttpRequest:
         self.host = host
         self.port = DEFAULT_PORT
         if port is not None :
-            self.port = port
+            self.port = int(port)
         self.path = DEFAULT_PATH
         if path is not None :
             self.path = path
@@ -129,7 +129,7 @@ class HttpRequest:
             newUrl = parseRedirectUrlFor300(response)
             matcher = re.search(URL_REGEX, newUrl)
             self.host = matcher.group(5)
-            self.port = matcher.group(7)
+            self.port = int(matcher.group(7))
             if self.port is None:
                 self.port = DEFAULT_PORT
                 
