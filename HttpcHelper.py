@@ -75,6 +75,9 @@ class HttpRequest:
                     request = ''.join([request, key,  ':' , value , CRLF])
 
 
+        if headersJson:
+            for key, value in headersJson.items():
+                request = ''.join([request, key,  ': ' , value , CRLF])
 
         if self.verb == POST:
             parameters = ''
@@ -95,12 +98,6 @@ class HttpRequest:
                                parameters])
             
         request = ''.join([request, CRLF])
-        
-        if headersJson:
-            for key, value in headersJson.items():
-                request = ''.join([request, key,  ': ' , value , CRLF])
-                
-
         self.request = request
         return
         

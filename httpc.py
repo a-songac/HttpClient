@@ -34,7 +34,6 @@ host = matcher.group(5)
 port = matcher.group(7)
 path = matcher.group(8)
 
-
 httpRequest = HttpRequest(url, verb, headers, host, port, path, data, file, verbose, outputFile)
 httpRequest.buildRequest()
 httpRequest.processRequest()
